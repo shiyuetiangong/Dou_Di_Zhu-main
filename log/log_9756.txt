@@ -1,0 +1,7 @@
+acting_player_position:landlord_down
+landlord:[12, 12, 12, 13, 13, 14, 14, 17]
+landlord_up:[5, 11, 11, 11, 11]
+landlord_down:[3, 3, 6, 9, 9, 12, 13, 17, 30]
+legal_actions:[[12], [13], [17], [30], []]
+landlord_up_most_wanted_card:[[5, 11, 11, 11], [11]]
+landlord_down_most_wanted_card:[]
