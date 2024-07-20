@@ -30,6 +30,8 @@ class GameEnv(object):
 
         self.players = players
 
+        self.setp_flag = False
+
         self.last_move_dict = {'landlord_down': [],
                                'landlord_up': [],
                                'landlord': []}
@@ -37,6 +39,10 @@ class GameEnv(object):
         self.played_cards = {'landlord': [],
                              'landlord_up': [],
                              'landlord_down': []}
+    
+        self.player_origin_cards = {'landlord': [],
+                                    'landlord_up': [],
+                                    'landlord_down': []}
 
         self.last_move = []
         self.last_two_moves = []
@@ -69,6 +75,9 @@ class GameEnv(object):
             card_play_data['landlord_up']
         self.info_sets['landlord_down'].player_hand_cards = \
             card_play_data['landlord_down']
+        self.player_origin_cards['landlord'] = card_play_data['landlord'][:]
+        self.player_origin_cards['landlord_up'] = card_play_data['landlord_up'][:]
+        self.player_origin_cards['landlord_down'] = card_play_data['landlord_down'][:]
         self.three_landlord_cards = card_play_data['three_landlord_cards']
         self.get_acting_player_position()
         self.game_infoset = self.get_infoset()
@@ -83,6 +92,17 @@ class GameEnv(object):
             self.update_num_wins_scores()
 
             self.game_over = True
+            # 写入原始手牌
+            if self.setp_flag:
+                log_path = 'log_'+str(os.getpid())+'.txt'
+                log_path = os.path.join('log',log_path)
+                with open(log_path,'a') as f:
+                    f.write('------------------\n')
+                    # f.write('game over\n')
+                    # 原始手牌
+                    f.write(f"player_origin_cards:{self.player_origin_cards}\n")
+                    f.write('------------------\n')
+
             
 
 
@@ -217,18 +237,23 @@ class GameEnv(object):
             last_move_type = md.get_move_type(last_move)
             # 如果农民下家可以压过地主，则pass
             legal_actions = self.get_legal_card_play_actions(True,'landlord_up',rival_move)
-            # 如果上家是pass，直接递牌
-            if rival_move_type['type'] == md.PASS & landlord_up_last_move_type['type'] != md.PASS :
-                action = []
-                self.log(action)
-            elif len(legal_actions) > 1 & last_move_type['type'] == md.PASS:
-                action = []
-                self.log(action)
-            else:
-                actions = self.get_most_wanted_card_action()
-                if len(actions) > 0:
-                    action = actions[0]
+            legal_lenth = len(legal_actions[0])
+            # landlord__most_wanted_card_action =self.most_wanted_card['landlord'][:]
+            if  legal_lenth != 0 :
+                # 地主pass，up未pass，则pass
+                if rival_move_type['type'] == md.PASS & landlord_up_last_move_type['type'] != md.PASS:
+                    action = []
                     self.log(action)
+                # down可出牌种类数大于1且牌权在up手里，则pass（可能把up堵死，但如果不这样的话当up不强势容易把地主牌权放走,需要取舍或做进一步处理）
+                # 疑似潜在问题：legal_actions = [[]],长度为1。 故当出现legal_actions:[[17], []]时，有可能触发递牌
+                elif len(legal_actions) > 1 & last_move_type['type'] == md.PASS & rival_move_type['type'] == md.PASS:
+                    action = []
+                    self.log(action)
+                else:
+                    actions = self.get_most_wanted_card_action()
+                    if len(actions) > 0:
+                        action = actions[0]
+                        self.log(action)
         if len(action) > 0:
             self.last_pid = self.acting_player_position
 
@@ -261,6 +286,7 @@ class GameEnv(object):
     
     def log(self,action):
         # 生成log文件夹
+        self.setp_flag = True
         if not os.path.exists('log'):
             os.makedirs('log')
         log_path = 'log_'+str(os.getpid())+'.txt'
@@ -449,6 +475,8 @@ class GameEnv(object):
         self.acting_player_position = None
         self.player_utility_dict = None
 
+        self.setp_flag = False
+
         self.last_move_dict =  {'landlord_down': [],
                                'landlord_up': [],
                                'landlord': []}
@@ -456,6 +484,10 @@ class GameEnv(object):
         self.played_cards = {'landlord': [],
                              'landlord_up': [],
                              'landlord_down': []}
+        
+        self.player_origin_cards = {'landlord': [],
+                                    'landlord_up': [],
+                                    'landlord_down': []}
 
         self.last_move = []
         self.last_two_moves = []
