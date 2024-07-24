@@ -1,0 +1,28 @@
+------------------
+game over
+------------------
+player_origin_cards:{'landlord': [10], 'landlord_up': [3, 6, 6, 6, 9], 'landlord_down': [3, 3, 4, 6, 8, 12, 12]}
+acting_player_position:landlord_down
+landlord:[10]
+landlord_up:[3, 6, 6, 6, 9]
+landlord_down:[3, 3, 4, 6, 8, 12, 12]
+legal_actions:[[12, 12], []]
+landlord_up_most_wanted_card:[[3, 6, 6, 6], [9]]
+landlord_down_most_wanted_card:[]
+last_move_dict:{"landlord_down": [], "landlord_up": [8, 8], "landlord": []}
+action:[]
+------------------
+player_origin_cards:{'landlord': [10], 'landlord_up': [9], 'landlord_down': [3, 3, 4, 6, 8, 12, 12]}
+acting_player_position:landlord_down
+landlord:[10]
+landlord_up:[9]
+landlord_down:[3, 3, 4, 6, 8, 12, 12]
+legal_actions:[[]]
+landlord_up_most_wanted_card:[[9]]
+landlord_down_most_wanted_card:[]
+last_move_dict:{"landlord_down": [], "landlord_up": [3, 6, 6, 6], "landlord": []}
+action:[]
+------------------
+------------------
+game over
+------------------
